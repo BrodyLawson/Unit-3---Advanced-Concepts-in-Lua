@@ -1,77 +1,91 @@
 -----------------------------------------------------------------------------------------
---
--- splash_screen.lua
--- Created by: Your Name
+-- pause.lua
+-- Created by: Gil Robern
+-- Modified by: Your Name
 -- Date: Month Day, Year
--- Description: This is the splash screen of the game. It displays the 
--- company logo that...
+-- Description: This pauses the game.
 -----------------------------------------------------------------------------------------
 
--- Use Composer Library
+-----------------------------------------------------------------------------------------
+-- INITIALIZATIONS
+-----------------------------------------------------------------------------------------
+
+-- Calling Composer Library
 local composer = require( "composer" )
 
--- Name the Scene
-sceneName = "splash_screen"
+local widget = require( "widget" )
 
 -----------------------------------------------------------------------------------------
 
--- Create Scene Object
+-- Naming Scene
+sceneName = "pause"
+
+-----------------------------------------------------------------------------------------
+
+-- Creating Scene Object
 local scene = composer.newScene( sceneName )
 
-----------------------------------------------------------------------------------------
--- LOCAL VARIABLES
 -----------------------------------------------------------------------------------------
- 
--- The local variables for this scene
-local Banana
-local scrollSpeed = 4
+-- FORWARD REFERENCES
+-----------------------------------------------------------------------------------------
+-- insert local variables
+local bkg
+local resumeButton
+-----------------------------------------------------------------------------------------
 
---local jungleSounds = audio.loadSound("Sounds/.mp3")
---local jungleSoundsChannel
-
---------------------------------------------------------------------------------------------
--- LOCAL FUNCTIONS
---------------------------------------------------------------------------------------------
-
--- The function that moves the Banana across the screen
-local function moveBanana()
-    Banana.y = Banana.y - scrollSpeed
-     if Banana.y < 95 then
-      scrollSpeed = 0
-    end
+-- Functions for buttons
+function ResumeTransitionPause( )
+    composer.hideOverlay( "fade", 100 )    
+    ResumeGame()
 end
 
--- The function that will go to the main menu 
-local function gotoMainMenu()
-    composer.gotoScene( "main_menu" )
-end
-
------------------------------------------------------------------------------------------
--- GLOBAL SCENE FUNCTIONS
------------------------------------------------------------------------------------------
 
 -- The function called when the screen doesn't exist
 function scene:create( event )
 
     -- Creating a group that associates objects with the scene
     local sceneGroup = self.view
+    local parent = event.parent
 
-    -- set the background to be black
-    display.setDefault("background", 0.0745098039215686, 0.5568627450980392, 0.7764705882352941)
+    -- Insert background
+    bkg = display.newImage("Images/Pause Box.png")
+    bkg.x = display.contentCenterX
+    bkg.y = display.contentCenterY
 
-    -- Insert the Banana image
-    Banana = display.newImageRect("Images/CompanyLogoBrody@2x.png", 200, 200)
+    -- Associating display objects with this scene 
+    sceneGroup:insert( bkg )
 
-    -- set the initial x and y position of the Banana
-    Banana.x = display.contentWidth/2
-    Banana.y = display.contentHeight/2
+    -- Send the background image to the back layer so all other objects can be on top
+    bkg:toBack()    
 
-    -- Insert objects into the scene group in order to ONLY be associated with this scene
-    sceneGroup:insert( Banana )
 
-end -- function scene:create( event )
+    -----------------------------------------------------------------------------------------
+    -- WIDGETS
+    -----------------------------------------------------------------------------------------
 
---------------------------------------------------------------------------------------------
+    -- Create Resume button
+    resumeButton = widget.newButton( 
+        {   
+            -- Set its position on the screen relative to the screen size
+            x = display.contentWidth/2,
+            y = display.contentHeight*1/3,
+
+            -- Insert the images here
+            defaultFile = "Images/Unpressed Resume Button.png",
+            overFile = "Images/Pressed Resume Button.png",
+
+            -- When the button is released, call the Level1 screen transition function
+            onRelease = ResumeTransitionPause         
+        } )
+
+
+    -- Initialize the scene here.
+    -- Group the buttons to this scene
+    sceneGroup:insert( resumeButton )
+
+end
+
+-----------------------------------------------------------------------------------------
 
 -- The function called when the scene is issued to appear on screen
 function scene:show( event )
@@ -85,51 +99,47 @@ function scene:show( event )
 
     -----------------------------------------------------------------------------------------
 
-    -- Called when the scene is still off screen (but is about to come on screen).
     if ( phase == "will" ) then
-       
+        
     -----------------------------------------------------------------------------------------
 
     elseif ( phase == "did" ) then
-        -- start the splash screen music
-        jungleSoundsChannel = audio.play(jungleSounds )
-
-        -- Call the moveBanana function as soon as we enter the frame.
-        Runtime:addEventListener("enterFrame", moveBanana)
-
-        -- Go to the main menu screen after the given time.
-        timer.performWithDelay ( 3000, gotoMainMenu)          
-        
+        -- Called when the scene is now on screen.
+        -- Insert code here to make the scene come alive.
+        -- Example: start timers, begin animation, play audio, etc.
     end
 
-end --function scene:show( event )
+end
 
 -----------------------------------------------------------------------------------------
 
 -- The function called when the scene is issued to leave the screen
 function scene:hide( event )
+    local sceneGroup = self.view
+    local phase = event.phase
+    local parent = event.parent
 
     -- Creating a group that associates objects with the scene
     local sceneGroup = self.view
+
+    -----------------------------------------------------------------------------------------
+
     local phase = event.phase
 
     -----------------------------------------------------------------------------------------
 
-    -- Called when the scene is on screen (but is about to go off screen).
-    -- Insert code here to "pause" the scene.
-    -- Example: stop timers, stop animation, stop audio, etc.
-    if ( phase == "will" ) then  
+    if ( phase == "will" ) then
+        -- Call the ResumeGame function
+        
 
     -----------------------------------------------------------------------------------------
 
-    -- Called immediately after scene goes off screen.
     elseif ( phase == "did" ) then
-        
-        -- stop the jungle sounds channel for this screen
-        audio.stop(jungleSoundsChannel)
+        -- Called immediately after scene goes off screen.    
+        --parent:ResumeGame()    
     end
 
-end --function scene:hide( event )
+end
 
 -----------------------------------------------------------------------------------------
 
@@ -145,7 +155,7 @@ function scene:destroy( event )
     -- Called prior to the removal of scene's view ("sceneGroup").
     -- Insert code here to clean up the scene.
     -- Example: remove display objects, save state, etc.
-end -- function scene:destroy( event )
+end
 
 -----------------------------------------------------------------------------------------
 -- EVENT LISTENERS
@@ -160,3 +170,4 @@ scene:addEventListener( "destroy", scene )
 -----------------------------------------------------------------------------------------
 
 return scene
+
