@@ -1,5 +1,4 @@
------------------------------------------------------------------------------------------
---
+------------------------------------------------------------------------------------------
 -- main_menu.lua
 -- Created by: Your Name
 -- Date: Month Day, Year
@@ -35,6 +34,7 @@ local scene = composer.newScene( sceneName )
 local bkg_image
 local playButton
 local creditsButton
+local helpButton
 
 -----------------------------------------------------------------------------------------
 -- LOCAL FUNCTIONS
@@ -94,8 +94,8 @@ function scene:create( event )
             y = display.contentHeight*7/8,
 
             -- Insert the images here
-            defaultFile = "Images/PlayButtonUnpressed.png",
-            overFile = "Images/PlayButtonPressed.png",
+            defaultFile = "Images/PlayButtonPressed@2x.png",
+            overFile = "Images/PlayButtonPressed@2x.png",
 
             -- When the button is released, call the Level1 screen transition function
             onRelease = Level1ScreenTransition          
@@ -120,18 +120,18 @@ function scene:create( event )
 
     -----------------------------------------------------------------------------------------
 
-     -- Creating Credits Button
+     -- Creating help Button
     helpButton = widget.newButton( 
         {
             -- Set its position on the screen relative to the screen size
-            x = display.contentWidth*7/8,
+            x = display.contentWidth*1/8,
             y = display.contentHeight*7/8,
 
             -- Insert the images here
-            defaultFile = "Images/HelpButtonUnpressed.png",
-            overFile = "Images/HelpButtonPressed.png",
+            defaultFile = "Images/HelpButtonPressed@2x.png",
+            overFile = "Images/HelpButtonUnPressed@2x.png",
 
-            -- When the button is released, call the Credits transition function
+            -- When the button is released, call the Help transition function
             onRelease = HelpTransition
         } )
 
@@ -140,7 +140,9 @@ function scene:create( event )
     -- Associating button widgets with this scene
     sceneGroup:insert( playButton )
     sceneGroup:insert( creditsButton )
-    
+    sceneGroup:insert( helpButton )
+
+
     -- INSERT INSTRUCTIONS BUTTON INTO SCENE GROUP
 
 end -- function scene:create( event )   

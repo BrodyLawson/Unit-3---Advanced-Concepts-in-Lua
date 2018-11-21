@@ -1,82 +1,65 @@
 -----------------------------------------------------------------------------------------
--- splash_screen.lua
--- Created by: Your Name
--- Date: Month Day, Year
--- Description: This is the splash screen of the game. It displays the 
--- company logo that...
+--
+-- SceneTemplate.lua
+-- Scene Template (Composer API)
+--
 -----------------------------------------------------------------------------------------
 
--- Use Composer Library
+-----------------------------------------------------------------------------------------
+-- INITIALIZATIONS
+-----------------------------------------------------------------------------------------
+
+-- Calling Composer Library
 local composer = require( "composer" )
 
--- Name the Scene
-sceneName = "splash_screen"
+local widget = require( "widget" )
 
 -----------------------------------------------------------------------------------------
 
--- Create Scene Object
+-- Naming Scene
+sceneName = "you_lose"
+
+-----------------------------------------------------------------------------------------
+
+-- Creating Scene Object
 local scene = composer.newScene( sceneName )
 
+-----------------------------------------------------------------------------------------
+-- FORWARD REFERENCES
+-----------------------------------------------------------------------------------------
+
+-- local variables for the scene
+local bkg
+
 ----------------------------------------------------------------------------------------
--- LOCAL VARIABLES
 -----------------------------------------------------------------------------------------
- 
--- The local variables for this scene
-local Banana
-local scrollSpeed = 4
-local textObject
-
---local jungleSounds = audio.loadSound("Sounds/.mp3")
---local jungleSoundsChannel
-
---------------------------------------------------------------------------------------------
 -- LOCAL FUNCTIONS
---------------------------------------------------------------------------------------------
-
--- The function that moves the Banana across the screen
-local function moveBanana()
-    Banana.y = Banana.y - scrollSpeed
-    if Banana.y < 95 then
-        scrollSpeed = 0
-        textObject.isVisable = true
-    end
-end
-
--- The function that will go to the main menu 
-local function gotoMainMenu()
-    composer.gotoScene( "main_menu" )
-end
-
------------------------------------------------------------------------------------------
--- GLOBAL SCENE FUNCTIONS
 -----------------------------------------------------------------------------------------
 
+--------------------------------------------------------------------------------------
 -- The function called when the screen doesn't exist
 function scene:create( event )
 
     -- Creating a group that associates objects with the scene
     local sceneGroup = self.view
 
-    -- set the background to be black
-    display.setDefault("background", 0.0745098039215686, 0.5568627450980392, 0.7764705882352941)
+    -- Display background
+    bkg = display.newImage("Images/YouLose.png")
+    bkg.x = display.contentCenterX
+    bkg.y = display.contentCenterY
+    bkg.width = display.contentWidth
+    bkg.height = display.contentHeight
+   
+    -- Associating display objects with this scene 
+    sceneGroup:insert( bkg )
+  
+end    
 
-    -- Insert the Banana image
-    Banana = display.newImageRect("Images/CompanyLogoBrody@2x.png", 200, 200)
+-----------------------------------------------------------------------------------------
+-- GLOBAL SCENE FUNCTIONS
+-----------------------------------------------------------------------------------------
 
-    -- set the initial x and y position of the Banana
-    Banana.x = display.contentWidth/2
-    Banana.y = display.contentHeight/2
-
-    textObject = display.newText("The Jojo's", display.contentWidth/2, 618 , nil, 235)
-    textObject:setTextColor(255/255, 0, 0)
-
-    -- Insert objects into the scene group in order to ONLY be associated with this scene
-    sceneGroup:insert( Banana )
-    sceneGroup:insert( textObject )
-
-end -- function scene:create( event )
-
---------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
 
 -- The function called when the scene is issued to appear on screen
 function scene:show( event )
@@ -90,24 +73,19 @@ function scene:show( event )
 
     -----------------------------------------------------------------------------------------
 
-    -- Called when the scene is still off screen (but is about to come on screen).
     if ( phase == "will" ) then
-       
+        -- Called when the scene is still off screen (but is about to come on screen).
+
     -----------------------------------------------------------------------------------------
 
     elseif ( phase == "did" ) then
-        -- start the splash screen music
-        jungleSoundsChannel = audio.play(jungleSounds )
 
-        -- Call the moveBanana function as soon as we enter the frame.
-        Runtime:addEventListener("enterFrame", moveBanana)
-
-        -- Go to the main menu screen after the given time.
-        timer.performWithDelay ( 3000, gotoMainMenu)          
-        
+        -- Called when the scene is now on screen.
+        -- Insert code here to make the scene come alive.
+        -- Example: start timers, begin animation, play audio, etc.
     end
 
-end --function scene:show( event )
+end
 
 -----------------------------------------------------------------------------------------
 
@@ -116,25 +94,25 @@ function scene:hide( event )
 
     -- Creating a group that associates objects with the scene
     local sceneGroup = self.view
+
+    -----------------------------------------------------------------------------------------
+
     local phase = event.phase
 
     -----------------------------------------------------------------------------------------
 
-    -- Called when the scene is on screen (but is about to go off screen).
-    -- Insert code here to "pause" the scene.
-    -- Example: stop timers, stop animation, stop audio, etc.
-    if ( phase == "will" ) then  
+    if ( phase == "will" ) then
+        -- Called when the scene is on screen (but is about to go off screen).
+        -- Insert code here to "pause" the scene.
+        -- Example: stop timers, stop animation, stop audio, etc.
 
     -----------------------------------------------------------------------------------------
 
-    -- Called immediately after scene goes off screen.
     elseif ( phase == "did" ) then
-        
-        -- stop the jungle sounds channel for this screen
-        audio.stop(jungleSoundsChannel)
+        -- Called immediately after scene goes off screen.
     end
 
-end --function scene:hide( event )
+end
 
 -----------------------------------------------------------------------------------------
 
@@ -150,7 +128,7 @@ function scene:destroy( event )
     -- Called prior to the removal of scene's view ("sceneGroup").
     -- Insert code here to clean up the scene.
     -- Example: remove display objects, save state, etc.
-end -- function scene:destroy( event )
+end
 
 -----------------------------------------------------------------------------------------
 -- EVENT LISTENERS
@@ -165,3 +143,4 @@ scene:addEventListener( "destroy", scene )
 -----------------------------------------------------------------------------------------
 
 return scene
+
