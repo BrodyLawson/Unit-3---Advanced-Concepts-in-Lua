@@ -56,11 +56,12 @@ local heart1
 local heart2
 local numLives = 2
 
-local rArrow 
+local rArrow
+--local lArrow 
 local uArrow
 
 local motionx = 0
-local SPEED = 5
+local SPEED = 100
 local LINEAR_VELOCITY = -100
 local GRAVITY = 7
 
